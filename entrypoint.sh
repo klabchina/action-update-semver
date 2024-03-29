@@ -10,8 +10,8 @@ MAJOR="${MINOR%.*}"                          # v1
 MAJOR_VERSION_TAG_ONLY=${INPUT_MAJOR_VERSION_TAG_ONLY:-}
 
 if [ "${GITHUB_REF}" = "${TAG}" ]; then
-  echo "This workflow is not triggered by tag push: GITHUB_REF=${GITHUB_REF}"
-  exit 1
+    echo "This workflow is not triggered by tag push: GITHUB_REF=${GITHUB_REF}"
+    exit 1
 fi
 
 MESSAGE="${INPUT_MESSAGE:-Release ${TAG}}"
@@ -26,7 +26,8 @@ git tag -fa "${MAJOR}" -m "${MESSAGE}"
 
 # Set up remote url for checkout@v1 action.
 if [ -n "${INPUT_GITHUB_TOKEN}" ]; then
-  git remote set-url origin "https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git"
+    bare_server_url=$(echo "${GITHUB_SERVER_URL}" | sed 's#^.\+://##')
+    git remote set-url origin "https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@${bare_server_url}/${GITHUB_REPOSITORY}.git"
 fi
 
 # Push
